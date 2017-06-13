@@ -6,8 +6,9 @@
 #include <QGridLayout>
 #include <QPalette>
 #include <QDebug>
+#include <funcwidget.h>
 
-#define ROW_NUM 7
+#define ROW_NUM 20
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
@@ -18,7 +19,10 @@ MainWindow::MainWindow(QWidget *parent)
     {
         addRow(i);
     }
+    FuncWidget *nfuncWidget = new FuncWidget();
+    connect(nfuncWidget->hideButton, SIGNAL(clicked()), this, SLOT(on_update_clicked()));
 }
+
 MainWindow::~MainWindow()
 {
 
@@ -26,7 +30,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupView()
 {
-    resize(1200,900);
+    resize(900,600);
     tableWidget = new QTableWidget(this);
     tableWidget->setColumnCount(1);
     tableWidget->setRowCount(ROW_NUM);
@@ -47,7 +51,8 @@ void MainWindow::setupView()
                 "border-top: 1px solid #dcdcdc;"
                 "}"
                 "QTableWidget::item:selected{"
-                        "background:rgb(34, 175, 75);"
+//                        "background:rgb(34, 175, 75);"
+                           "background:white;"
                   "}"
                 );
 
@@ -72,57 +77,71 @@ void MainWindow::addRow(int row)
     AppWidget* appWidget = new AppWidget();
     tableWidget->setCellWidget(row,0,appWidget);
 
-//    QLabel *svbLabel = new QLabel();
-//    QHBoxLayout *rowLayout = new QHBoxLayout();
-//    rowLayout->setMargin(0);
-//    tableWidget->setCellWidget(row,1,svbLabel);
-//    svbLabel->setLayout(rowLayout);
 
-//    QLabel *sizeLabel = new QLabel();
-//    sizeLabel->resize(16,64);
-//    sizeLabel->setText(tr("13.8M"));
-
-//    QLabel *versionLabel = new QLabel();
-//    versionLabel->setText(tr("V7.0.0"));
-
-//    rowLayout->addStretch();
-//    QPushButton *updateButton = new QPushButton();
-//    updateButton->setFixedSize(80,32);
-//    QPalette pal;
-//    pal.setColor(QPalette::ButtonText, QColor(2,122,255));
-//    updateButton->setPalette(pal);
-//    updateButton->setStyleSheet("border: 1px solid #027aff  ; border-radius: 2px; ");
-// //    updateButton->setStyleSheet("border-color: #027aff; border-width: 1px; border-style: solid; border-radius: 2px; ");
-//    updateButton->setText(tr("update"));
-
-//    rowLayout->addWidget(sizeLabel);
-//    rowLayout->addSpacing(112);
-//    rowLayout->addWidget(versionLabel);
-//    rowLayout->addSpacing(112);
-//    rowLayout->addWidget(updateButton);
-
-//    updateButton->setProperty("row", row);
-//    connect(updateButton,SIGNAL(clicked()),this,SLOT(on_update_licked()));
+    connect(appWidget->headButton,SIGNAL(clicked()),this,SLOT(on_update_clicked()));
+    connect(appWidget->nameButton,SIGNAL(clicked()),this,SLOT(on_update_clicked()));
+    connect(appWidget->funcButton,SIGNAL(clicked()),this,SLOT(on_update_clicked()));
+    connect(appWidget->updateButton,SIGNAL(clicked()),this,SLOT(on_update_clicked()));
 }
 
-void MainWindow::on_update_licked()
+void MainWindow::on_update_clicked()
 {
-    QPushButton *btn = (QPushButton *) sender();
-    clicked_row = btn->property("row").toInt();
-    qDebug() << "clicked_row = " << clicked_row;
-    getAppWidget();
-    tableWidget->removeRow(clicked_row);
+    for(int i = 0; i < tableWidget->rowCount(); i++)
+    {
+        AppWidget* appWidget = (AppWidget*)tableWidget->cellWidget(i,0);
+//        QPushButton *btn = (QPushButton *) sender();
+//        qDebug() <<  "btn->text:" << btn->text();
+
+        if(sender() == appWidget->headButton )
+        {
+            qDebug() << "btn = headButton:" << "row = " << i;
+
+        }
+        else if(sender() == appWidget->nameButton)
+        {
+            qDebug() << "btn = nameButton:" << "row = " << i;
+        }
+        else if(sender() == appWidget->funcButton)
+        {
+            qDebug() << "btn = funcButton:" << "row = " << i;
+            tableWidget->insertRow(i+1);
+
+            FuncWidget *nfuncWidget = new FuncWidget();
+            tableWidget->setCellWidget(i+1,0,nfuncWidget);
+            appWidget->funcButton->setEnabled(false);
+            connect(nfuncWidget->hideButton,SIGNAL(clicked()),this,SLOT(on_hideButton_clicked()));
+            break;
+        }
+        else if(sender() == appWidget->updateButton)
+        {
+            qDebug() << "btn == updateButton:" << "row = " << i;
+        }
+        else
+        {
+            FuncWidget* gfuncWidget = (FuncWidget*)tableWidget->cellWidget(i,0);
+            if(sender() == gfuncWidget->hideButton)
+            {
+                qDebug() << "btn == hideButton:" << "row = " << i;
+                tableWidget->removeRow(i);
+            }
+        }
+    }
+
+
+//    clicked_row = btn->property("row").toInt();
+//    getAppWidget();
+//    tableWidget->removeRow(clicked_row);
 }
 
-//void MainWindow::on_newfun_clicked()
+void MainWindow::on_hideButton_clicked()
+{
+
+}
+
+//void MainWindow::getAppWidget()
 //{
-
+//    AppWidget *curAppWidget = (AppWidget *)tableWidget->cellWidget(clicked_row,0);
+//    qDebug() << "curAppWidget->nameButton->text()" << curAppWidget->nameButton->text();
 //}
-
-void MainWindow::getAppWidget()
-{
-    AppWidget *curAppWidget = (AppWidget *)tableWidget->cellWidget(clicked_row,0);
-    qDebug() << "curAppWidget->nameButton->text()" << curAppWidget->nameButton->text();
-}
 
 

@@ -21,6 +21,9 @@ public:
     QPushButton *nameButton;
     QLabel *introLabel;
     QPushButton *funcButton;
+    QLabel *sizeLabel;
+    QLabel *versionLabel;
+    QPushButton *updateButton;
     QPixmap pix;
 
 };

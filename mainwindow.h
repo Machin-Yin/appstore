@@ -23,8 +23,9 @@ private:
     QHBoxLayout *standardLayout;
     QSplitter *splitter;
     int clicked_row;
-private slots:
-    void on_update_licked();
+public slots:
+    void on_update_clicked();   
+    void on_hideButton_clicked();
 };
 
 #endif // MAINWINDOW_H

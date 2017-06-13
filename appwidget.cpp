@@ -25,7 +25,7 @@ AppWidget::AppWidget(QWidget *parent) : QWidget(parent)
     nameButton->setStyleSheet("text-align: left;");
     nameButton->setText(tr("QQ"));
 
-    QString text1(tr("全新视觉，简约界面乐享沟通！全新视觉，简约界面乐享沟通！"));
+    QString text1("全新视觉，简约界面乐享沟通！全新视觉，简约界面乐享沟通！");
     QFont font;
     QFontMetrics fm(font);
     QString text2 = fm.elidedText(text1, Qt::ElideRight, SIZE_W);
@@ -44,14 +44,14 @@ AppWidget::AppWidget(QWidget *parent) : QWidget(parent)
     funcButton->setMaximumWidth(64);
 //    qDebug() << "funcButton->size()" << funcButton->size() ;
 
-    QLabel *sizeLabel = new QLabel();
+    sizeLabel = new QLabel();
     sizeLabel->resize(16,64);
     sizeLabel->setText(tr("13.8M"));
 
-    QLabel *versionLabel = new QLabel();
+    versionLabel = new QLabel();
     versionLabel->setText(tr("V7.0.0"));
 
-    QPushButton *updateButton = new QPushButton();
+    updateButton = new QPushButton();
     updateButton->setFixedSize(80,32);
 //    QPalette uppal;
 //    uppal.setColor(QPalette::ButtonText, QColor(2,122,255));
@@ -59,6 +59,8 @@ AppWidget::AppWidget(QWidget *parent) : QWidget(parent)
 //    updateButton->setStyleSheet("border: 1px solid #027aff  ; border-radius: 2px; ");
 //    updateButton->setStyleSheet("border-color: #027aff; border-width: 1px; border-style: solid; border-radius: 2px; ");
     updateButton->setText(tr("update"));
+//    connect(updateButton,SIGNAL(clicked()),this,SLOT(on_update_licked()));
+
 
 //    rowLayout->addWidget(sizeLabel);
 //    rowLayout->addSpacing(112);
