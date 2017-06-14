@@ -24,8 +24,7 @@ private:
     QSplitter *splitter;
     int clicked_row;
 public slots:
-    void on_update_clicked();   
-    void on_hideButton_clicked();
+    void on_button_clicked();
 };
 
 #endif // MAINWINDOW_H

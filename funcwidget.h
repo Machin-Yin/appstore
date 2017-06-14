@@ -23,7 +23,8 @@ private:
     QVBoxLayout *leftLayout;
     QVBoxLayout *rightLayout;
     QLabel *funcLabel;
-    QTextEdit *funcEdit;
+//    QTextEdit *funcEdit;
+    QLabel *nfuncLabel;
 };
 
 #endif // FUNCWIDGET_H

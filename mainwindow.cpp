@@ -8,7 +8,7 @@
 #include <QDebug>
 #include <funcwidget.h>
 
-#define ROW_NUM 20
+#define ROW_NUM 7
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent)
@@ -19,8 +19,6 @@ MainWindow::MainWindow(QWidget *parent)
     {
         addRow(i);
     }
-    FuncWidget *nfuncWidget = new FuncWidget();
-    connect(nfuncWidget->hideButton, SIGNAL(clicked()), this, SLOT(on_update_clicked()));
 }
 
 MainWindow::~MainWindow()
@@ -41,6 +39,8 @@ void MainWindow::setupView()
     tableWidget->setFrameShape(QFrame::NoFrame);
     tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
     tableWidget->setFocusPolicy(Qt::NoFocus);
+
+    tableWidget->resizeColumnToContents (0);
 
     tableWidget->setShowGrid(false);
     tableWidget->setStyleSheet(
@@ -77,14 +77,13 @@ void MainWindow::addRow(int row)
     AppWidget* appWidget = new AppWidget();
     tableWidget->setCellWidget(row,0,appWidget);
 
-
-    connect(appWidget->headButton,SIGNAL(clicked()),this,SLOT(on_update_clicked()));
-    connect(appWidget->nameButton,SIGNAL(clicked()),this,SLOT(on_update_clicked()));
-    connect(appWidget->funcButton,SIGNAL(clicked()),this,SLOT(on_update_clicked()));
-    connect(appWidget->updateButton,SIGNAL(clicked()),this,SLOT(on_update_clicked()));
+    connect(appWidget->headButton,SIGNAL(clicked()),this,SLOT(on_button_clicked()));
+    connect(appWidget->nameButton,SIGNAL(clicked()),this,SLOT(on_button_clicked()));
+    connect(appWidget->funcButton,SIGNAL(clicked()),this,SLOT(on_button_clicked()));
+    connect(appWidget->updateButton,SIGNAL(clicked()),this,SLOT(on_button_clicked()));
 }
 
-void MainWindow::on_update_clicked()
+void MainWindow::on_button_clicked()
 {
     for(int i = 0; i < tableWidget->rowCount(); i++)
     {
@@ -95,26 +94,29 @@ void MainWindow::on_update_clicked()
         if(sender() == appWidget->headButton )
         {
             qDebug() << "btn = headButton:" << "row = " << i;
-
+            break;
         }
         else if(sender() == appWidget->nameButton)
         {
             qDebug() << "btn = nameButton:" << "row = " << i;
+            break;
         }
         else if(sender() == appWidget->funcButton)
         {
             qDebug() << "btn = funcButton:" << "row = " << i;
             tableWidget->insertRow(i+1);
+            tableWidget->setRowHeight(i+1,140);
 
             FuncWidget *nfuncWidget = new FuncWidget();
             tableWidget->setCellWidget(i+1,0,nfuncWidget);
             appWidget->funcButton->setEnabled(false);
-            connect(nfuncWidget->hideButton,SIGNAL(clicked()),this,SLOT(on_hideButton_clicked()));
+            connect(nfuncWidget->hideButton,SIGNAL(clicked()),this,SLOT(on_button_clicked()));
             break;
         }
         else if(sender() == appWidget->updateButton)
         {
             qDebug() << "btn == updateButton:" << "row = " << i;
+            break;
         }
         else
         {
@@ -122,26 +124,15 @@ void MainWindow::on_update_clicked()
             if(sender() == gfuncWidget->hideButton)
             {
                 qDebug() << "btn == hideButton:" << "row = " << i;
+                AppWidget *eblBtnWid = (AppWidget *)tableWidget->cellWidget(i-1,0);
+                eblBtnWid->funcButton->setEnabled(true);
+
                 tableWidget->removeRow(i);
             }
         }
     }
-
-
-//    clicked_row = btn->property("row").toInt();
-//    getAppWidget();
-//    tableWidget->removeRow(clicked_row);
 }
 
-void MainWindow::on_hideButton_clicked()
-{
 
-}
-
-//void MainWindow::getAppWidget()
-//{
-//    AppWidget *curAppWidget = (AppWidget *)tableWidget->cellWidget(clicked_row,0);
-//    qDebug() << "curAppWidget->nameButton->text()" << curAppWidget->nameButton->text();
-//}
 
 
