@@ -25,6 +25,7 @@ private:
     int clicked_row;
 public slots:
     void on_button_clicked();
+    void textAreaChanged(int hig);
 };
 
 #endif // MAINWINDOW_H

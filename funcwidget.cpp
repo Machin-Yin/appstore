@@ -1,4 +1,5 @@
 #include "funcwidget.h"
+#include <QDebug>
 
 FuncWidget::FuncWidget(QWidget *parent) : QWidget(parent)
 {
@@ -7,18 +8,16 @@ FuncWidget::FuncWidget(QWidget *parent) : QWidget(parent)
     leftLayout = new QVBoxLayout;
     rightLayout = new QVBoxLayout;
     funcLabel = new QLabel();
-//    funcEdit = new QTextEdit();
-    nfuncLabel = new QLabel();
+    nfuncEdit = new QTextEdit();
+//    nfuncLabel = new QLabel();
     hideButton = new QPushButton();
 
-    funcLabel->setText(tr("新版特性"));
-    nfuncLabel->setText("lsdflafl asdfsldks ldkslak dasld fkslfsk dhhhhhh hhhh hh,hhh hhhhhh hhhhhhhhhh hhhhhhh hhhhhhhhhhh hhhhhhhhhhhhh hhhhhhhhhhhhhh hhfslfskldfskd lfkslfls klsllad kdkkkkkk kkkkkkkkk      ddddddd ddddd        dddddddd            kkkkkkkkkkkk kkkkkkkkkkk lssssssss ssssssssssss ssssssssssss ssssssssss sssssssssssssd dddddddddddggggg gggggggggmmmmm mmmmmmmmmmmm mmmmmmmmm mmmmmmm mmmuuuu uuuuuuuuu uuuuuuuu ggggs");
-//    nfuncLabel->setStyleSheet("border: 0;" "background:white");
-//    nfuncLabel->setReadOnly(true);
-    nfuncLabel->adjustSize();
-//    nfuncLabel->setGeometry(QRect(328, 240, 329, 27*4));
-    nfuncLabel->setWordWrap(true);
-    nfuncLabel->setAlignment(Qt::AlignTop);
+    funcLabel->setText(tr(" 新版特性"));
+    nfuncEdit->setText("- 全新皮肤引擎，全新视觉盛宴; \n- QQ大视频，视频聊天更大更清晰; \n- 聊天窗口个性动作，互动方式更多样; \n- QQ聊天装扮，聊天窗口与众不同;　\n- 空间编辑器新增记事本，双击头像直接开启;　\n- 自定义好友上线提醒，实时关注亲密好友;　\n- QQ锁独立密码，隐私保护更方便安全;　\n- 更换头像界面优化，自定义头像更换更便捷;");
+    nfuncEdit->setStyleSheet("border: 0;" "background:white");
+    nfuncEdit->setReadOnly(true);
+    nfuncEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
     QPixmap pixmap(tr("image/hide.png"));
     hideButton->setFlat(true);
     hideButton->setIcon(pixmap);
@@ -30,10 +29,8 @@ FuncWidget::FuncWidget(QWidget *parent) : QWidget(parent)
     leftLayout->addSpacing(20);
     leftLayout->addWidget(funcLabel);
     leftLayout->addSpacing(12);
-    leftLayout->addWidget(nfuncLabel);
-//    leftLayout->addStretch();
+    leftLayout->addWidget(nfuncEdit);
     leftLayout->addSpacing(24);
-    funcLayout->addStretch();
     funcLayout->addSpacing(100);
     funcLayout->addLayout(rightLayout);
     rightLayout->addStretch();
@@ -42,4 +39,16 @@ FuncWidget::FuncWidget(QWidget *parent) : QWidget(parent)
     funcLayout->addSpacing(10);
     setLayout(funcLayout);
 
+}
+
+bool FuncWidget::event(QEvent *event)
+{
+    if(event->type() == QEvent::Resize)
+    {
+//        qDebug()<<nfuncEdit->document()->size().height()<<endl;
+        int docheight = nfuncEdit->document()->size().height();
+        emit sigTextHeight(docheight);
+        return true;
+    }
+    return QWidget::event(event);
 }

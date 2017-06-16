@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QEvent>
 
 class FuncWidget : public QWidget
 {
@@ -14,17 +15,19 @@ class FuncWidget : public QWidget
 public:
     explicit FuncWidget(QWidget *parent = 0);
     QPushButton *hideButton;
-
-signals:
-
-public slots:
-private:
     QHBoxLayout *funcLayout;
     QVBoxLayout *leftLayout;
     QVBoxLayout *rightLayout;
     QLabel *funcLabel;
-//    QTextEdit *funcEdit;
-    QLabel *nfuncLabel;
+    QTextEdit *nfuncEdit;
+//    QLabel *nfuncLabel;
+
+signals:
+    int sigTextHeight(int);
+
+public slots:
+private:
+    bool event(QEvent *event);
 };
 
 #endif // FUNCWIDGET_H

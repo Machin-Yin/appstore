@@ -32,16 +32,11 @@ void MainWindow::setupView()
     tableWidget = new QTableWidget(this);
     tableWidget->setColumnCount(1);
     tableWidget->setRowCount(ROW_NUM);
-    tableWidget->setColumnWidth(0,this->width()-450);
-    tableWidget->setColumnWidth(1,450);
     tableWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
     tableWidget->setFrameShape(QFrame::NoFrame);
     tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
     tableWidget->setFocusPolicy(Qt::NoFocus);
-
     tableWidget->resizeColumnToContents (0);
-
     tableWidget->setShowGrid(false);
     tableWidget->setStyleSheet(
                 "QTableWidget {"
@@ -51,11 +46,9 @@ void MainWindow::setupView()
                 "border-top: 1px solid #dcdcdc;"
                 "}"
                 "QTableWidget::item:selected{"
-//                        "background:rgb(34, 175, 75);"
-                           "background:white;"
-                  "}"
+                "background:white;"
+                "}"
                 );
-
     tableWidget->verticalHeader()->setDefaultSectionSize(96);
     tableWidget->horizontalHeader()->setStretchLastSection(true);
 
@@ -88,34 +81,38 @@ void MainWindow::on_button_clicked()
     for(int i = 0; i < tableWidget->rowCount(); i++)
     {
         AppWidget* appWidget = (AppWidget*)tableWidget->cellWidget(i,0);
-//        QPushButton *btn = (QPushButton *) sender();
-//        qDebug() <<  "btn->text:" << btn->text();
 
         if(sender() == appWidget->headButton )
         {
-            qDebug() << "btn = headButton:" << "row = " << i;
+            qDebug() << "btn == headButton:" << "row == " << i;
             break;
         }
         else if(sender() == appWidget->nameButton)
         {
-            qDebug() << "btn = nameButton:" << "row = " << i;
+            qDebug() << "btn == nameButton:" << "row == " << i;
             break;
         }
         else if(sender() == appWidget->funcButton)
         {
-            qDebug() << "btn = funcButton:" << "row = " << i;
+            qDebug() << "btn == funcButton:" << "row == " << i;
             tableWidget->insertRow(i+1);
-            tableWidget->setRowHeight(i+1,140);
+//            tableWidget->setRowHeight(i+1,240);
 
             FuncWidget *nfuncWidget = new FuncWidget();
             tableWidget->setCellWidget(i+1,0,nfuncWidget);
+            int textHeight  = nfuncWidget->nfuncEdit->document()->size().height();
+            qDebug() << "textHeight =="  << textHeight;
+            tableWidget->setRowHeight(i+1,textHeight+20+16+18+22);
             appWidget->funcButton->setEnabled(false);
+
             connect(nfuncWidget->hideButton,SIGNAL(clicked()),this,SLOT(on_button_clicked()));
+            connect(nfuncWidget,SIGNAL(sigTextHeight(int)),this,SLOT(textAreaChanged(int)));
+
             break;
         }
         else if(sender() == appWidget->updateButton)
         {
-            qDebug() << "btn == updateButton:" << "row = " << i;
+            qDebug() << "btn == updateButton:" << "row == " << i;
             break;
         }
         else
@@ -123,13 +120,26 @@ void MainWindow::on_button_clicked()
             FuncWidget* gfuncWidget = (FuncWidget*)tableWidget->cellWidget(i,0);
             if(sender() == gfuncWidget->hideButton)
             {
-                qDebug() << "btn == hideButton:" << "row = " << i;
+                qDebug() << "btn == hideButton:" << "row == " << i;
                 AppWidget *eblBtnWid = (AppWidget *)tableWidget->cellWidget(i-1,0);
                 eblBtnWid->funcButton->setEnabled(true);
-
                 tableWidget->removeRow(i);
             }
         }
+    }
+}
+
+void MainWindow::textAreaChanged(int hig)
+{
+    qDebug() << "The Text Area Changed!" << endl;
+    qDebug() << "The TextEdit Height Is " << hig;
+    for(int i = 0; i < tableWidget->rowCount(); i++)
+    {
+       FuncWidget* chEditHeight = (FuncWidget*)tableWidget->cellWidget(i,0);
+       if(sender() == chEditHeight)
+       {
+           tableWidget->setRowHeight(i,hig+20+16+18+22);
+       }
     }
 }
 
