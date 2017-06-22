@@ -1,11 +1,13 @@
 #include "appwidget.h"
 #include <QDebug>
 #include <QPalette>
+#include <QEvent>
 
-#define SIZE_W 250
+//#define SIZE_W 250
 
 AppWidget::AppWidget(QWidget *parent) : QWidget(parent)
 {
+//    test_Widget = new QWidget();
     appLayout = new QHBoxLayout();
     appLayout->setMargin(0);
     rightLayout = new QVBoxLayout();
@@ -25,13 +27,21 @@ AppWidget::AppWidget(QWidget *parent) : QWidget(parent)
     nameButton->setStyleSheet("text-align: left;");
     nameButton->setText(tr("QQ"));
 
-    QString text1("全新视觉，简约界面乐享沟通！全新视觉，简约界面乐享沟通！");
-    QFont font;
-    QFontMetrics fm(font);
-    QString text2 = fm.elidedText(text1, Qt::ElideRight, SIZE_W);
+    introstr = "全新视觉，简约界面乐享沟通！全新视觉，简约界面乐享沟通！全新视觉，简约界面乐享沟通！全新视觉，简约界面乐享沟通！";
+
     introLabel = new QLabel();
+    introLabel->size().setWidth(20);
+//    introLabel->setMaximumWidth(100);
+//    QFont font;
+//    QFontMetrics fm(font);
+//    int fontSize = fm.width(introstr);
+//    QString fmstr = introstr;
+//    if(fontSize > 339)
+//    {
+//        fmstr = fm.elidedText(introstr, Qt::ElideRight, 338);
+//    }
     introLabel->setStyleSheet("border-right: 1px; border-style: solid; border-color: #cccccc;");
-    introLabel->setText(text2);
+    introLabel->setText(introstr);
 
     funcButton = new QPushButton();
     funcButton->setFlat(true);
@@ -42,7 +52,6 @@ AppWidget::AppWidget(QWidget *parent) : QWidget(parent)
     funcButton->setPalette(fucpal);
     funcButton->setStyleSheet("text-align: left;");
     funcButton->setMaximumWidth(64);
-//    qDebug() << "funcButton->size()" << funcButton->size() ;
 
     sizeLabel = new QLabel();
     sizeLabel->resize(16,64);
@@ -59,14 +68,6 @@ AppWidget::AppWidget(QWidget *parent) : QWidget(parent)
 //    updateButton->setStyleSheet("border: 1px solid #027aff  ; border-radius: 2px; ");
 //    updateButton->setStyleSheet("border-color: #027aff; border-width: 1px; border-style: solid; border-radius: 2px; ");
     updateButton->setText(tr("update"));
-//    connect(updateButton,SIGNAL(clicked()),this,SLOT(on_update_licked()));
-
-
-//    rowLayout->addWidget(sizeLabel);
-//    rowLayout->addSpacing(112);
-//    rowLayout->addWidget(versionLabel);
-//    rowLayout->addSpacing(112);
-//    rowLayout->addWidget(updateButton);
 
     appLayout->addWidget(headButton);
     appLayout->setSpacing(16);
@@ -84,9 +85,17 @@ AppWidget::AppWidget(QWidget *parent) : QWidget(parent)
     appLayout->addWidget(versionLabel);
     appLayout->addSpacing(112);
     appLayout->addWidget(updateButton);
-//    appLayout->add
     setLayout(appLayout);
+}
 
+bool AppWidget::event(QEvent *event)
+{
+    if(event->type() == QEvent::Resize )
+    {
+        emit sigintrofm();
+        return true;
+    }
+    return QWidget::event(event);
 }
 
 

@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     {
         addRow(i);
     }
+
 }
 
 MainWindow::~MainWindow()
@@ -28,7 +29,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupView()
 {
-    resize(900,600);
+    resize(960,640);
     tableWidget = new QTableWidget(this);
     tableWidget->setColumnCount(1);
     tableWidget->setRowCount(ROW_NUM);
@@ -69,11 +70,13 @@ void MainWindow::addRow(int row)
 {
     AppWidget* appWidget = new AppWidget();
     tableWidget->setCellWidget(row,0,appWidget);
+    qDebug() << "appWidget->introLabel->sizeHint()" << appWidget->introLabel->sizeHint();
 
     connect(appWidget->headButton,SIGNAL(clicked()),this,SLOT(on_button_clicked()));
     connect(appWidget->nameButton,SIGNAL(clicked()),this,SLOT(on_button_clicked()));
     connect(appWidget->funcButton,SIGNAL(clicked()),this,SLOT(on_button_clicked()));
     connect(appWidget->updateButton,SIGNAL(clicked()),this,SLOT(on_button_clicked()));
+    connect(appWidget,SIGNAL(sigintrofm()),this,SLOT(strLenChanged()));
 }
 
 void MainWindow::on_button_clicked()
@@ -96,7 +99,6 @@ void MainWindow::on_button_clicked()
         {
             qDebug() << "btn == funcButton:" << "row == " << i;
             tableWidget->insertRow(i+1);
-//            tableWidget->setRowHeight(i+1,240);
 
             FuncWidget *nfuncWidget = new FuncWidget();
             tableWidget->setCellWidget(i+1,0,nfuncWidget);
@@ -139,6 +141,36 @@ void MainWindow::textAreaChanged(int hig)
        if(sender() == chEditHeight)
        {
            tableWidget->setRowHeight(i,hig+20+16+18+22);
+       }
+    }
+}
+
+void MainWindow::strLenChanged()
+{
+    qDebug() << "The Text Area Changed!" << endl;
+    for(int i = 0; i < tableWidget->rowCount(); i++)
+    {
+       AppWidget* chLabelWidth = (AppWidget*)tableWidget->cellWidget(i,0);
+       if(sender() == chLabelWidth)
+       {
+           qDebug() << "The introLabel sizeHint() is " << chLabelWidth->introLabel->sizeHint();
+           chLabelWidth->introLabel->setText(chLabelWidth->introstr);
+           int labelWidth = chLabelWidth->introLabel->width();
+           QFont font;
+           QFontMetrics fm(font);
+           int fontSize = fm.width(chLabelWidth->introstr);
+           QString fmstr = chLabelWidth->introstr;
+           labelWidth = tableWidget->width() -520;
+           if(labelWidth > 550)
+           {
+               labelWidth = 550;
+           }
+           if(fontSize > labelWidth)
+           {
+               fmstr = fm.elidedText(chLabelWidth->introstr, Qt::ElideRight, labelWidth - 70);
+
+           }
+           chLabelWidth->introLabel->setText(fmstr);
        }
     }
 }

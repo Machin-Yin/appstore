@@ -18,14 +18,17 @@ public:
     void setupView();
     void addRow(int row);
     void getAppWidget();
-private:
     QTableWidget *tableWidget;
+
+private:
+//    QTableWidget *tableWidget;
     QHBoxLayout *standardLayout;
     QSplitter *splitter;
     int clicked_row;
 public slots:
     void on_button_clicked();
     void textAreaChanged(int hig);
+    void strLenChanged();
 };
 
 #endif // MAINWINDOW_H
